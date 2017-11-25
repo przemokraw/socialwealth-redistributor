@@ -1,6 +1,6 @@
-from scipy,special import comb
+from scipy.special import comb
 from prettytable import PrettyTable
-from sympy import poly, sympify
+from sympy import Poly
 from sympy.abc import x
 
 import sr.payoff_matrix_operations as pmo
@@ -16,7 +16,7 @@ class Game:
             'C': [None for el in range(self.n + 1)],
             'D': [None for el in range(self.n + 1)]
         }
-        result['C'][0] = res['D'][0] = 0
+        result['C'][0] = result['D'][0] = 0
         result['C'][-1] = self.payoff_matrix['C'][-1]
         result['D'][-1] = self.payoff_matrix['D'][-1]
 
@@ -32,7 +32,7 @@ class Game:
             shapley_value = compute_shapley_value(v, c_players * 'C' + d_players * 'D')
             result['C'][c_players] = shapley_value['C']
             result['D'][d_players] = shapley_value['D']
-        return Game(res)
+        return Game(result)
 
     def mean_cooperation(self):
         expr = self.__get_replicator_rhs()
@@ -61,7 +61,7 @@ class Game:
     def __str__(self):
         opponent_profiles = ['C' * (self.n - i - 1) + i * 'D' for i in range(self.n)]
         t = PrettyTable([''] + opponent_profiles)
-        t.add_row(['C'] + [round(el, 2) for el in reversed(self.payoff_matrix['C'][1:]))])
+        t.add_row(['C'] + [round(el, 2) for el in reversed(self.payoff_matrix['C'][1:])])
         t.add_row(['D'] + [round(el, 2) for el in self.payoff_matrix['D'][1:]])
         return str(t)
 
